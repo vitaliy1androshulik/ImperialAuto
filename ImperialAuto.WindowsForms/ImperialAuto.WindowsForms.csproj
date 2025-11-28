@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <Folder Include="Images\Icon\" />
+    <Folder Include="Images\HelpingImage\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -30,6 +30,11 @@ namespace ImperialAuto.WindowsForms
         public void LoadUser()
         {
             var user = _user;
+
+            var brands = _db.Brands.OrderBy(b => b.Name).ToList();
+            cbBrand.Items = brands.Select(b => b.Name).ToArray();
+
+
         }
 
         private void CarList_Load(object sender, EventArgs e)
@@ -44,9 +49,24 @@ namespace ImperialAuto.WindowsForms
 
         private void cuiButton2_Click(object sender, EventArgs e)
         {
-            var form = new CarAddEdit();
+            var form = new CarAddEdit(_db);
             form.Show();
 
+        }
+
+        private void btnAddBrand_Click(object sender, EventArgs e)
+        {
+            var form = new BrandAdd(_db);
+            form.Show();
+        }
+
+        private void cbBrand_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string selectedBrandName = cbBrand.SelectedItem.ToString();
+
+            var brand = _db.Brands.FirstOrDefault(b => b.Name == selectedBrandName);
+
+            int brandId = brand.Id;
         }
     }
 }
