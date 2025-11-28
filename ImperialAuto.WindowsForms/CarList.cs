@@ -41,5 +41,11 @@ namespace ImperialAuto.WindowsForms
         {
 
         }
+
+        private void cuiButton2_Click(object sender, EventArgs e)
+        {
+            var form = new CarAddEdit();
+            form.Show();
+        }
     }
 }
