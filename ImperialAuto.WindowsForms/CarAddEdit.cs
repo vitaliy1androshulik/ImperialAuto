@@ -64,7 +64,7 @@ namespace ImperialAuto.WindowsForms
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
                     selectedImagePath = ofd.FileName;
-                    pb.BackgroundImage = Image.FromFile(selectedImagePath);
+                    pb.Content = Image.FromFile(selectedImagePath);
                     imagePaths.Add(selectedImagePath);
                 }
 

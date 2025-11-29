@@ -1,5 +1,6 @@
 ﻿using ImperialAuto.Domain.Entities;
 using ImperialAuto.Infrastructure.Database;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace ImperialAuto.WindowsForms
 {
@@ -25,21 +27,36 @@ namespace ImperialAuto.WindowsForms
             _user = user;
             _user_role = role;
             this.Load += CarList_Load;
+            flPanel.AutoScroll = true;
+            flPanel.WrapContents = true; 
+            flPanel.FlowDirection = FlowDirection.LeftToRight;
         }
 
-        public void LoadUser()
+        public void LoadInfo()
         {
             var user = _user;
 
             var brands = _db.Brands.OrderBy(b => b.Name).ToList();
             cbBrand.Items = brands.Select(b => b.Name).ToArray();
 
+            flPanel.Controls.Clear();
+
+            var cars = _db.Cars
+            .Include(c => c.Brand)
+             .Include(c => c.ImageUrls)
+             .ToList();
+            
+            foreach (var car in cars)
+            {
+                var card = new CarCard(car);
+                flPanel.Controls.Add(card);
+            }
 
         }
 
         private void CarList_Load(object sender, EventArgs e)
         {
-            LoadUser();
+            LoadInfo();
         }
 
         private void cuiLabel1_Load(object sender, EventArgs e)

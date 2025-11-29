@@ -42,6 +42,7 @@
             cuiLabel4 = new CuoreUI.Controls.cuiLabel();
             cuiButton2 = new CuoreUI.Controls.cuiButton();
             btnAddBrand = new CuoreUI.Controls.cuiButton();
+            flPanel = new FlowLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panelTop.SuspendLayout();
             cuiPanel1.SuspendLayout();
@@ -327,12 +328,22 @@
             btnAddBrand.TextOffset = new Point(0, 0);
             btnAddBrand.Click += btnAddBrand_Click;
             // 
+            // flPanel
+            // 
+            flPanel.Location = new Point(28, 531);
+            flPanel.Margin = new Padding(0);
+            flPanel.Name = "flPanel";
+            flPanel.Padding = new Padding(8);
+            flPanel.Size = new Size(1004, 391);
+            flPanel.TabIndex = 6;
+            // 
             // CarList
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(28, 27, 32);
-            ClientSize = new Size(1062, 1058);
+            ClientSize = new Size(1062, 938);
+            Controls.Add(flPanel);
             Controls.Add(btnAddBrand);
             Controls.Add(cuiButton2);
             Controls.Add(cuiLabel4);
@@ -362,5 +373,6 @@
         private CuoreUI.Controls.cuiLabel cuiLabel4;
         private CuoreUI.Controls.cuiButton cuiButton2;
         private CuoreUI.Controls.cuiButton btnAddBrand;
+        private FlowLayoutPanel flPanel;
     }
 }
