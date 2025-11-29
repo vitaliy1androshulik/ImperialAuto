@@ -46,6 +46,7 @@ namespace ImperialAuto.WindowsForms
         {
             var form = new CarAddEdit();
             form.Show();
+
         }
     }
 }
