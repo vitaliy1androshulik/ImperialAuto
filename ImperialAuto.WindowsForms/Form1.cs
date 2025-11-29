@@ -103,7 +103,7 @@ namespace ImperialAuto.WindowsForms
             }
             else if (!isLogin)
             {
-                if (user!=null )
+                if (user != null)
                 {
                     lbNotUser.Visible = true;
                     lbNotUser.Text = "Користувач з таким ім'ям вже існує!";
@@ -111,7 +111,7 @@ namespace ImperialAuto.WindowsForms
                 }
                 else
                 {
-                    if(tbPassword.Text.Length==0)
+                    if (tbPassword.Text.Length == 0)
                     {
                         tbPassword.Clear();
                         tbPass.Clear();
@@ -146,7 +146,7 @@ namespace ImperialAuto.WindowsForms
 
                         }
                     }
-                    
+
                 }
             }
         }
@@ -154,6 +154,11 @@ namespace ImperialAuto.WindowsForms
         private void lbPass_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnLogin_Enter(object sender, EventArgs e)
+        {
+            btnLogin_Click(sender,e);
         }
     }
 }
