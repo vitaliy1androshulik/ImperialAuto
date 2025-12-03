@@ -70,7 +70,7 @@
             lbBrandModel.Location = new Point(13, 484);
             lbBrandModel.Margin = new Padding(4, 3, 4, 3);
             lbBrandModel.Name = "lbBrandModel";
-            lbBrandModel.Size = new Size(590, 55);
+            lbBrandModel.Size = new Size(590, 73);
             lbBrandModel.TabIndex = 1;
             lbBrandModel.VerticalAlignment = StringAlignment.Near;
             // 

@@ -49,11 +49,15 @@ namespace ImperialAuto.WindowsForms
 
             foreach (var car in cars)
             {
-                var card = new CarCard(car, _db);
+                var card = new CarCard(car, _db, (int)_user.Role);
                 card.OnCarEdited += () => LoadInfo();
                 flPanel.Controls.Add(card);
             }
-
+            if((int)_user.Role!=1)
+            {
+                btnAddBrand.Visible = false;
+                cuiButton2.Visible = false;
+            }
         }
 
         private void CarList_Load(object sender, EventArgs e)
@@ -107,7 +111,7 @@ namespace ImperialAuto.WindowsForms
                     .ToList();
                 foreach (var car in cars)
                 {
-                    flPanel.Controls.Add(new CarCard(car, _db));
+                    flPanel.Controls.Add(new CarCard(car, _db,(int)_user.Role));
                 }
             }
 
@@ -126,7 +130,7 @@ namespace ImperialAuto.WindowsForms
             if (string.IsNullOrWhiteSpace(query))
             {
                 foreach (var car in carsQuery.ToList())
-                    flPanel.Controls.Add(new CarCard(car, _db));
+                    flPanel.Controls.Add(new CarCard(car, _db, (int)_user.Role));
                 return;
             }
             carsQuery = carsQuery.Where(c =>
@@ -136,7 +140,7 @@ namespace ImperialAuto.WindowsForms
                 c.Price.ToString().Contains(query)
             );
             foreach (var car in carsQuery.ToList())
-                flPanel.Controls.Add(new CarCard(car, _db));
+                flPanel.Controls.Add(new CarCard(car, _db, (int)_user.Role));
         }
     }
 }

@@ -19,11 +19,13 @@ namespace ImperialAuto.WindowsForms
         private ImperialAutoDbContext _db;
         private Car _car { get; set; }
         public event Action OnCarEdited;
-        public CarCard(Car car, ImperialAutoDbContext db)
+        private readonly int _role;
+        public CarCard(Car car, ImperialAutoDbContext db, int Role)
         {
             InitializeComponent();
             _car = car;
             _db = db;
+            _role = Role;
             LoadCarData();
 
 
@@ -47,6 +49,12 @@ namespace ImperialAuto.WindowsForms
                 var firstImage = _car.ImageUrls.First().ImageUrl;
                 if (File.Exists(firstImage))
                     cuiPbImage.Content = Image.FromFile(firstImage);
+            }
+            if(_role!=1)
+            {
+                btnEdit.Visible = false;
+                btnDelete.Visible = false;
+                this.Size = new System.Drawing.Size(203, 290);
             }
         }
 

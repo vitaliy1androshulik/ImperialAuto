@@ -86,7 +86,7 @@
             lbPrice.Font = new Font("Segoe UI Semibold", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 204);
             lbPrice.ForeColor = Color.FromArgb(212, 175, 55);
             lbPrice.HorizontalAlignment = StringAlignment.Near;
-            lbPrice.Location = new Point(10, 254);
+            lbPrice.Location = new Point(9, 254);
             lbPrice.Margin = new Padding(4, 3, 4, 3);
             lbPrice.Name = "lbPrice";
             lbPrice.Size = new Size(159, 35);
@@ -198,7 +198,7 @@
             Controls.Add(lbName);
             Controls.Add(cuiPbImage);
             Name = "CarCard";
-            Size = new Size(203, 333);
+            Size = new Size(203, 290);
             Click += CarCard_Click;
             ResumeLayout(false);
             PerformLayout();
