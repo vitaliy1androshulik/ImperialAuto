@@ -18,12 +18,17 @@ namespace ImperialAuto.WindowsForms
     {
         private readonly ImperialAutoDbContext _db;
         private string selectedImagePath = null;
+        private Car _car;
         private List<string> imagePaths = new List<string>();
-        public CarAddEdit(ImperialAutoDbContext db)
+        private bool isEdit = false;
+        public CarAddEdit(ImperialAutoDbContext db, Car car=null)
         {
             InitializeComponent();
             _db = db;
+            _car = car;
             this.Load += CarAddEdit_Load;
+            
+                
         }
 
 
@@ -42,8 +47,68 @@ namespace ImperialAuto.WindowsForms
         private void CarAddEdit_Load(object sender, EventArgs e)
         {
             LoadInfo();
+            if (_car != null)
+            {
+                isEdit = true;
+                LoadCarForEdit(); 
+            }
         }
+        private void LoadInfoForEdit()
+        {
+            LoadInfo();
+            var brand = _db.Brands.FirstOrDefault(b => b.Id == _car.BrandId);
 
+            if (brand != null)
+            {
+                cbBrand.SelectedItem = brand.Name;
+            }
+            var fuel = _db.EngineTypes.FirstOrDefault(e => e.Id == _car.EngineTypeId);
+
+            if (fuel != null)
+            {
+                cbEnginetype.SelectedItem = fuel.FuelType;
+            }
+            var color = _db.CarColors.FirstOrDefault(c => c.Id == _car.ColorId);
+
+            if (color != null)
+            {
+                cbColor.SelectedItem = color.Color;
+            }
+        }
+        private void LoadCarForEdit()
+        {
+            if (_car == null) return;
+            LoadInfoForEdit();
+            tbModel.contentTextField.Text = _car.Model;
+            tbYear.contentTextField.Text = _car.Year.ToString();
+            tbPrice.contentTextField.Text = _car.Price.ToString();
+            tbVolume.contentTextField.Text = _car.Volume.ToString();
+            
+            if (_car.ImageUrls != null && _car.ImageUrls.Any())
+            {
+                flPanel.Controls.Clear();
+
+                foreach (var imgObj in _car.ImageUrls)
+                {
+                    var imgPath = imgObj.ImageUrl;
+
+                    if (!File.Exists(imgPath))
+                        continue;
+
+                    cuiPictureBox pb = new cuiPictureBox();
+                    pb.Width = 145;
+                    pb.Height = 145;
+                    pb.Margin = new Padding(0, 0, 5, 0);
+                    pb.BackgroundImageLayout = ImageLayout.Zoom;
+                    pb.OutlineThickness = 1F;
+                    pb.PanelOutlineColor = Color.FromArgb(212, 175, 55);
+                    pb.Rounding = new Padding(15);
+                    pb.Content = Image.FromFile(imgPath);
+
+                    flPanel.Controls.Add(pb);
+                }
+            }
+        }
         private void cuiButton3_Click(object sender, EventArgs e)
         {
 
@@ -91,55 +156,91 @@ namespace ImperialAuto.WindowsForms
 
         private void cuiButton1_Click(object sender, EventArgs e)
         {
-            string selectedBrandName = cbBrand.SelectedItem.ToString();
-            var brand = _db.Brands.FirstOrDefault(b => b.Name == selectedBrandName);
-            int brandId = brand.Id;
-
-            string selectedColor = cbColor.SelectedItem.ToString();
-            var color = _db.CarColors.FirstOrDefault(b => b.Color == selectedColor);
-            int colorId = color.Id;
-
-            string selectedEngine = cbEnginetype.SelectedItem.ToString();
-            var engine = _db.EngineTypes.FirstOrDefault(b => b.FuelType == selectedEngine);
-            int engineId = engine.Id;
-
             
-
-            var Car = new Car
+            if(isEdit==true)
             {
-                BrandId = brandId,
-                Model= tbModel.contentTextField.Text,
-                Year=int.Parse(tbYear.contentTextField.Text),
-                Price = int.Parse(tbPrice.contentTextField.Text),
-                Volume = double.Parse(tbVolume.contentTextField.Text),
-                EngineTypeId = engineId,
-                ColorId = colorId,
-                
-            };
-            _db.Cars.Add(Car);
-            _db.SaveChanges();
-            foreach (var path in imagePaths)
-            {
-                string imagesFolder = Path.Combine(Application.StartupPath, "carImages");
-                if (!Directory.Exists(imagesFolder))
-                    Directory.CreateDirectory(imagesFolder);
-
-                string fileName = Path.GetFileName(path);
-                string destPath = Path.Combine(imagesFolder, fileName);
-
-                File.Copy(path, destPath, true);
-                string relativePath = Path.Combine("carImages", fileName);
-
-                _db.CarImages.Add(new CarImage
+                if (_car == null)
                 {
-                    CarId = Car.Id,
-                    ImageUrl = relativePath
-                });
-            }
-            _db.SaveChanges(); 
+                    _car = new Car();
+                    _db.Cars.Add(_car);
+                }
 
-            MessageBox.Show("Автомобіль успішно додано!");
-            this.Close();
+                _car.Model = tbModel.contentTextField.Text;
+                _car.Year = int.Parse(tbYear.contentTextField.Text);
+                _car.Volume = double.Parse(tbVolume.contentTextField.Text);
+                _car.Price = int.Parse(tbPrice.contentTextField.Text);
+
+                var brandEd = _db.Brands.FirstOrDefault(b => b.Name == cbBrand.SelectedItem.ToString());
+                if (brandEd != null)
+                    _car.BrandId = brandEd.Id;
+                var fuelEd = _db.EngineTypes.FirstOrDefault(e => e.FuelType == cbEnginetype.SelectedItem.ToString());
+
+                if (fuelEd != null)
+                {
+                    _car.EngineTypeId = fuelEd.Id;
+                }
+                var colorEd = _db.CarColors.FirstOrDefault(c => c.Color == cbColor.SelectedItem.ToString());
+
+                if (colorEd != null)
+                {
+                    _car.ColorId = colorEd.Id;
+                }
+                _db.SaveChanges();
+
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+            }
+            else if(isEdit==false)
+            {
+                string selectedBrandName = cbBrand.SelectedItem.ToString();
+                var brand = _db.Brands.FirstOrDefault(b => b.Name == selectedBrandName);
+                int brandId = brand.Id;
+
+                string selectedColor = cbColor.SelectedItem.ToString();
+                var color = _db.CarColors.FirstOrDefault(b => b.Color == selectedColor);
+                int colorId = color.Id;
+
+                string selectedEngine = cbEnginetype.SelectedItem.ToString();
+                var engine = _db.EngineTypes.FirstOrDefault(b => b.FuelType == selectedEngine);
+                int engineId = engine.Id;
+
+
+
+                var Car = new Car
+                {
+                    BrandId = brandId,
+                    Model = tbModel.contentTextField.Text,
+                    Year = int.Parse(tbYear.contentTextField.Text),
+                    Price = int.Parse(tbPrice.contentTextField.Text),
+                    Volume = double.Parse(tbVolume.contentTextField.Text),
+                    EngineTypeId = engineId,
+                    ColorId = colorId,
+
+                };
+                _db.Cars.Add(Car);
+                _db.SaveChanges();
+                foreach (var path in imagePaths)
+                {
+                    string imagesFolder = Path.Combine(Application.StartupPath, "carImages");
+                    if (!Directory.Exists(imagesFolder))
+                        Directory.CreateDirectory(imagesFolder);
+
+                    string fileName = Path.GetFileName(path);
+                    string destPath = Path.Combine(imagesFolder, fileName);
+
+                    File.Copy(path, destPath, true);
+                    string relativePath = Path.Combine("carImages", fileName);
+
+                    _db.CarImages.Add(new CarImage
+                    {
+                        CarId = Car.Id,
+                        ImageUrl = relativePath
+                    });
+                }
+                _db.SaveChanges();
+
+                this.Close();
+            }
         }
     }
 }

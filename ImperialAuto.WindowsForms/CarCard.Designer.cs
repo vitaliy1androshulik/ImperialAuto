@@ -40,7 +40,6 @@
             // 
             // cuiPbImage
             // 
-            cuiPbImage.AutoSize = true;
             cuiPbImage.AutoValidate = AutoValidate.EnablePreventFocusChange;
             cuiPbImage.BackgroundImageLayout = ImageLayout.Center;
             cuiPbImage.Content = (Image)resources.GetObject("cuiPbImage.Content");
@@ -131,6 +130,7 @@
             btnEdit.TabIndex = 25;
             btnEdit.TextAlignment = StringAlignment.Center;
             btnEdit.TextOffset = new Point(0, 0);
+            btnEdit.Click += btnEdit_Click;
             // 
             // btnDelete
             // 
@@ -169,6 +169,7 @@
             btnDelete.TabIndex = 26;
             btnDelete.TextAlignment = StringAlignment.Center;
             btnDelete.TextOffset = new Point(0, 0);
+            btnDelete.Click += btnDelete_Click;
             // 
             // lbModel
             // 
@@ -198,6 +199,7 @@
             Controls.Add(cuiPbImage);
             Name = "CarCard";
             Size = new Size(203, 333);
+            Click += CarCard_Click;
             ResumeLayout(false);
             PerformLayout();
         }

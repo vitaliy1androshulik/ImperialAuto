@@ -33,26 +33,39 @@ namespace ImperialAuto.WindowsForms
             {
                 lbPass.Visible = true;
                 tbPass.Visible = true;
-                btnLogin.Text = "Зареєструватись";
-                lbText.Text = "Уже маєте аккаунт?";
+                btnLogin.Text = "Register";
+                label1.Text = "Register";
+                lbText.Text = "Already have an account? Login";
                 lbPassword.Visible = false;
                 lbNotUser.Visible = false;
-                tbUsername.Clear();
-                tbPassword.Clear();
+                tbUsername.contentTextField.Text=null;
+                tbPassword.contentTextField.Text = null;
                 isLogin = false;
+                cuiPanel1.Size = new System.Drawing.Size(261, 458);
+                this.Size = new System.Drawing.Size(301, 521);
+                btnLogin.Location = new System.Drawing.Point(17, 392);
+                lbText.Location = new System.Drawing.Point(36, 429);
+                label1.Location = new System.Drawing.Point(60, 98);
             }
             else if (!isLogin)
             {
                 lbPass.Visible = false;
                 tbPass.Visible = false;
-                btnLogin.Text = "Увійти";
-                lbText.Text = "Не маєте аккаунт?";
+                btnLogin.Text = "Login";
+                label1.Text = "Login";
+                lbText.Text = "Don`t have an account?";
+                lbCorrectPass.Visible = false;
                 lbPassword.Visible = false;
                 lbNotUser.Visible = false;
-                tbUsername.Clear();
-                tbPassword.Clear();
+                tbUsername.contentTextField.Text = null;
+                tbPassword.contentTextField.Text = null;
 
                 isLogin = true;
+                cuiPanel1.Size = new System.Drawing.Size(261, 388);
+                this.Size = new System.Drawing.Size(301, 447);
+                btnLogin.Location = new System.Drawing.Point(17, 318);
+                lbText.Location = new System.Drawing.Point(59, 360);
+                label1.Location = new System.Drawing.Point(82, 98);
             }
 
         }
@@ -64,26 +77,27 @@ namespace ImperialAuto.WindowsForms
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            var user = _db.Users.FirstOrDefault(u => u.Name == tbUsername.Text);
+            var user = _db.Users.FirstOrDefault(u => u.Name == tbUsername.contentTextField.Text);
             lbNotUser.Visible = false;
             lbPassword.Visible = false;
             if (isLogin)
             {
                 if (user == null)
                 {
-                    tbPassword.Clear();
+                    tbPassword.contentTextField.Text = null;
                     lbNotUser.Visible = true;
                     return;
                 }
-                if (user.Password != tbPassword.Text)
+                if (user.Password != tbPassword.contentTextField.Text)
                 {
                     lbPassword.Visible = true;
-                    lbPassword.Text = "Не вірний пароль";
-                    tbPassword.Clear();
+                    lbPassword.Text = "Incorrect password";
+                    tbPassword.contentTextField.Text = null;
+                    
                     return;
                 }
 
-                if (user != null && user.Password == tbPassword.Text)
+                if (user != null && user.Password == tbPassword.contentTextField.Text)
                 {
                     if (user.Role == UserRole.Admin)
                     {
@@ -106,27 +120,27 @@ namespace ImperialAuto.WindowsForms
                 if (user != null)
                 {
                     lbNotUser.Visible = true;
-                    lbNotUser.Text = "Користувач з таким ім'ям вже існує!";
+                    lbNotUser.Text = "A user with that name already exists!";
                     return;
                 }
                 else
                 {
-                    if (tbPassword.Text.Length == 0)
+                    if (tbPassword.contentTextField.Text.Length == 0)
                     {
-                        tbPassword.Clear();
-                        tbPass.Clear();
+                        tbPassword.contentTextField.Text = null;
+                        tbPass.contentTextField.Text = null;
                         lbPassword.Visible = true;
-                        lbPassword.Text = "Введіть пароль";
+                        lbPassword.Text = "Enter the password";
                         return;
                     }
                     else
                     {
-                        if (tbPassword.Text == tbPass.Text)
+                        if (tbPassword.contentTextField.Text == tbPass.contentTextField.Text)
                         {
                             var newUser = new User
                             {
-                                Name = tbUsername.Text,
-                                Password = tbPassword.Text,
+                                Name = tbUsername.contentTextField.Text,
+                                Password = tbPassword.contentTextField.Text,
                                 Role = UserRole.User
                             };
 
@@ -136,13 +150,13 @@ namespace ImperialAuto.WindowsForms
                             form.Show();
                             this.Hide();
                         }
-                        else if (tbPassword.Text != tbPass.Text)
+                        else if (tbPassword.contentTextField.Text != tbPass.contentTextField.Text)
                         {
                             lbPassword.Visible = true;
-                            lbPassword.Text = "Паролі не співпадають";
+                            lbPassword.Text = "Passwords do not match";
                             lbCorrectPass.Visible = true;
-                            tbPassword.Clear();
-                            tbPass.Clear();
+                            tbPassword.contentTextField.Text = null;
+                            tbPass.contentTextField.Text = null;
 
                         }
                     }

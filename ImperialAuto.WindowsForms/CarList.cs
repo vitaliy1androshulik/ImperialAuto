@@ -28,8 +28,9 @@ namespace ImperialAuto.WindowsForms
             _user_role = role;
             this.Load += CarList_Load;
             flPanel.AutoScroll = true;
-            flPanel.WrapContents = true; 
+            flPanel.WrapContents = true;
             flPanel.FlowDirection = FlowDirection.LeftToRight;
+            
         }
 
         public void LoadInfo()
@@ -45,10 +46,11 @@ namespace ImperialAuto.WindowsForms
             .Include(c => c.Brand)
              .Include(c => c.ImageUrls)
              .ToList();
-            
+
             foreach (var car in cars)
             {
-                var card = new CarCard(car);
+                var card = new CarCard(car, _db);
+                card.OnCarEdited += () => LoadInfo();
                 flPanel.Controls.Add(card);
             }
 
@@ -67,8 +69,8 @@ namespace ImperialAuto.WindowsForms
         private void cuiButton2_Click(object sender, EventArgs e)
         {
             var form = new CarAddEdit(_db);
-            form.Show();
-
+            form.ShowDialog();
+            LoadInfo();
         }
 
         private void btnAddBrand_Click(object sender, EventArgs e)
@@ -79,11 +81,62 @@ namespace ImperialAuto.WindowsForms
 
         private void cbBrand_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (cbBrand.SelectedItem == null)
+                return;
             string selectedBrandName = cbBrand.SelectedItem.ToString();
 
             var brand = _db.Brands.FirstOrDefault(b => b.Name == selectedBrandName);
 
+            if (brand == null)
+                return;
+
             int brandId = brand.Id;
+
+            if (brandId == 11)
+            {
+                LoadInfo();
+            }
+            else
+            {
+                flPanel.Controls.Clear();
+
+                var cars = _db.Cars
+                    .Where(c => c.BrandId == brandId)
+                    .Include(c => c.Brand)
+                    .Include(c => c.ImageUrls)
+                    .ToList();
+                foreach (var car in cars)
+                {
+                    flPanel.Controls.Add(new CarCard(car, _db));
+                }
+            }
+
+        }
+
+        private void cuiTextBox1_ContentChanged(object sender, EventArgs e)
+        {
+            string query = cuiTextBox1.contentTextField.Text.Trim().ToLower();
+
+            flPanel.Controls.Clear();
+            var carsQuery = _db.Cars
+                .Include(c => c.Brand)
+                .Include(c => c.ImageUrls)
+                .AsQueryable();
+
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                foreach (var car in carsQuery.ToList())
+                    flPanel.Controls.Add(new CarCard(car, _db));
+                return;
+            }
+            carsQuery = carsQuery.Where(c =>
+                c.Model.ToLower().Contains(query) ||
+                c.Brand.Name.ToLower().Contains(query) ||
+                c.Year.ToString().Contains(query) ||
+                c.Price.ToString().Contains(query)
+            );
+            foreach (var car in carsQuery.ToList())
+                flPanel.Controls.Add(new CarCard(car, _db));
         }
     }
 }

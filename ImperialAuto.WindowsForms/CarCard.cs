@@ -1,7 +1,10 @@
 ﻿using ImperialAuto.Domain.Entities;
+using ImperialAuto.Infrastructure.Database;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -13,12 +16,14 @@ namespace ImperialAuto.WindowsForms
 {
     public partial class CarCard : UserControl
     {
-        public Car _car { get; set; }
-        public CarCard(Car car)
+        private ImperialAutoDbContext _db;
+        private Car _car { get; set; }
+        public event Action OnCarEdited;
+        public CarCard(Car car, ImperialAutoDbContext db)
         {
             InitializeComponent();
             _car = car;
-
+            _db = db;
             LoadCarData();
 
 
@@ -43,6 +48,64 @@ namespace ImperialAuto.WindowsForms
                 if (File.Exists(firstImage))
                     cuiPbImage.Content = Image.FromFile(firstImage);
             }
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            if (_car == null) return;
+
+            var result = MessageBox.Show(
+                "Ви впевнені, що хочете видалити це авто?",
+                "Підтвердження",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning
+            );
+
+            if (result != DialogResult.Yes)
+                return;
+
+            try
+            {
+                var carToDelete = _db.Cars
+                    .Include(c => c.ImageUrls)
+                    .FirstOrDefault(c => c.Id == _car.Id);
+
+                if (carToDelete == null)
+                {
+                    MessageBox.Show("Авто не знайдено");
+                    return;
+                }
+                foreach (var img in carToDelete.ImageUrls)
+                {
+                    if (File.Exists(img.ImageUrl))
+                        File.Delete(img.ImageUrl);
+                }
+                _db.Cars.Remove(carToDelete);
+                _db.SaveChanges();
+
+                MessageBox.Show("Авто успішно видалено!");
+                OnCarEdited?.Invoke();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Помилка при видаленні: " + ex.Message);
+            }
+            OnCarEdited?.Invoke();
+        }
+
+        private void btnEdit_Click(object sender, EventArgs e)
+        {
+            if (_car == null) return;
+
+            var form = new CarAddEdit(_db, _car);
+            form.ShowDialog();
+            OnCarEdited?.Invoke();
+        }
+
+        private void CarCard_Click(object sender, EventArgs e)
+        {
+            var form = new CarInfo(_car, _db);
+            form.ShowDialog();
         }
     }
 }
