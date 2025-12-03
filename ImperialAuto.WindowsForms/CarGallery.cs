@@ -25,19 +25,21 @@ namespace ImperialAuto.WindowsForms
             if (LicenseManager.UsageMode == LicenseUsageMode.Designtime) return;
             SetupLayout();
         }
-        private cuiPictureBox mainImage;
+        private PictureBox mainImage;
         private FlowLayoutPanel previewPanel;
         private void SetupLayout()
         {
             
-
-            mainImage = new cuiPictureBox();
+            
+            mainImage = new PictureBox();
             mainImage.Dock = DockStyle.Top;
             mainImage.Width = 650;
             mainImage.Height = 350;
             mainImage.BackColor = Color.Transparent;
-            mainImage.OutlineThickness = 3;
-            mainImage.PanelOutlineColor = Color.FromArgb(255, 192, 128);
+            mainImage.SizeMode = PictureBoxSizeMode.Zoom;
+
+            //mainImage.OutlineThickness = 3;
+            //mainImage.PanelOutlineColor = Color.FromArgb(255, 192, 128);
 
 
             previewPanel = new FlowLayoutPanel();
@@ -47,7 +49,6 @@ namespace ImperialAuto.WindowsForms
             previewPanel.FlowDirection = FlowDirection.LeftToRight;
             previewPanel.Height = 120;
             previewPanel.Padding = new Padding(10);
-            previewPanel.BackColor = Color.FromArgb(42, 46, 48);
 
             this.Controls.Add(previewPanel);
             this.Controls.Add(mainImage);
@@ -59,7 +60,7 @@ namespace ImperialAuto.WindowsForms
 
             if (car == null || car.ImageUrls == null || car.ImageUrls.Count == 0)
             {
-                mainImage.Content = null;
+                mainImage.Image = null;
                 return;
             }
 
@@ -72,7 +73,7 @@ namespace ImperialAuto.WindowsForms
 
             if (_images.Count == 0)
             {
-                mainImage.Content = null;
+                mainImage.Image = null;
                 return;
             }
 
@@ -88,9 +89,9 @@ namespace ImperialAuto.WindowsForms
                 pb.Cursor = Cursors.Hand;
                 pb.OutlineThickness = 3;
                 pb.PanelOutlineColor = Color.FromArgb(255, 192, 128);
-
+                pb.BackgroundImageLayout = ImageLayout.Zoom;
                 using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read))
-                    pb.Content = Image.FromStream(fs);
+                    pb.BackgroundImage = Image.FromStream(fs);
 
                 pb.Tag = path;
                 pb.Click += Thumbnail_Click;
@@ -103,12 +104,12 @@ namespace ImperialAuto.WindowsForms
         {
             if (!File.Exists(path))
             {
-                mainImage.Content = null;
+                mainImage.Image = null;
                 return;
             }
 
             using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read))
-                mainImage.Content = Image.FromStream(fs);
+                mainImage.Image = Image.FromStream(fs);
         }
         private void Thumbnail_Click(object sender, EventArgs e)
         {

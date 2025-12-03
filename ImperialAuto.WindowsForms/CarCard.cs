@@ -1,4 +1,5 @@
-﻿using ImperialAuto.Domain.Entities;
+﻿using CuoreUI.Controls;
+using ImperialAuto.Domain.Entities;
 using ImperialAuto.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -37,6 +38,7 @@ namespace ImperialAuto.WindowsForms
         }
         private void LoadCarData()
         {
+
             if (_car == null) return;
 
             lbName.Text = _car.Brand?.Name.ToString();
@@ -48,13 +50,19 @@ namespace ImperialAuto.WindowsForms
             {
                 var firstImage = _car.ImageUrls.First().ImageUrl;
                 if (File.Exists(firstImage))
-                    cuiPbImage.Content = Image.FromFile(firstImage);
+                {
+                    cuiPbImage.BackgroundImage = Image.FromFile(firstImage);
+                    cuiPbImage.BackgroundImageLayout = ImageLayout.Zoom;
+                }
+
+
             }
-            if(_role!=1)
+            if (_role != 1)
             {
                 btnEdit.Visible = false;
                 btnDelete.Visible = false;
                 this.Size = new System.Drawing.Size(203, 290);
+                cuiPbImage.Size = new System.Drawing.Size(183, 146);
             }
         }
 
@@ -109,11 +117,25 @@ namespace ImperialAuto.WindowsForms
             form.ShowDialog();
             OnCarEdited?.Invoke();
         }
-
-        private void CarCard_Click(object sender, EventArgs e)
+        private void OpenEditForm()
         {
             var form = new CarInfo(_car, _db);
             form.ShowDialog();
+        }
+        private void CarCard_Click(object sender, EventArgs e)
+        {
+            OpenEditForm();
+        }
+
+        private void cuiPbImage_Click(object sender, EventArgs e)
+        {
+            OpenEditForm();
+        }
+
+        private void lbName_Click_1(object sender, EventArgs e)
+        {
+            OpenEditForm();
+            
         }
     }
 }

@@ -77,6 +77,7 @@
             // cbBrand
             // 
             cbBrand.BackgroundColor = Color.FromArgb(28, 29, 32);
+            cbBrand.Cursor = Cursors.Hand;
             cbBrand.DropDownBackgroundColor = Color.FromArgb(28, 29, 32);
             cbBrand.DropDownForeColor = Color.FromArgb(212, 175, 55);
             cbBrand.ExpandArrowColor = Color.Gray;

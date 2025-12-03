@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CarCard));
             cuiPbImage = new CuoreUI.Controls.cuiPictureBox();
             lbName = new Label();
             lbYear = new CuoreUI.Controls.cuiLabel();
@@ -40,9 +39,12 @@
             // 
             // cuiPbImage
             // 
-            cuiPbImage.AutoValidate = AutoValidate.EnablePreventFocusChange;
-            cuiPbImage.BackgroundImageLayout = ImageLayout.Center;
-            cuiPbImage.Content = (Image)resources.GetObject("cuiPbImage.Content");
+            cuiPbImage.AllowDrop = true;
+            cuiPbImage.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            cuiPbImage.AutoSize = true;
+            cuiPbImage.BackgroundImageLayout = ImageLayout.Zoom;
+            cuiPbImage.Content = null;
+            cuiPbImage.Cursor = Cursors.Hand;
             cuiPbImage.ImageTint = Color.White;
             cuiPbImage.Location = new Point(10, 10);
             cuiPbImage.Margin = new Padding(4, 3, 4, 3);
@@ -52,12 +54,14 @@
             cuiPbImage.PanelOutlineColor = Color.FromArgb(255, 192, 128);
             cuiPbImage.Rotation = 0;
             cuiPbImage.Rounding = new Padding(8);
-            cuiPbImage.Size = new Size(184, 146);
+            cuiPbImage.Size = new Size(183, 146);
             cuiPbImage.TabIndex = 0;
+            cuiPbImage.Click += cuiPbImage_Click;
             // 
             // lbName
             // 
             lbName.AutoSize = true;
+            lbName.Cursor = Cursors.Hand;
             lbName.Font = new Font("Segoe UI Semibold", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 204);
             lbName.ForeColor = Color.FromArgb(212, 175, 55);
             lbName.Location = new Point(7, 159);
@@ -65,11 +69,12 @@
             lbName.Size = new Size(159, 30);
             lbName.TabIndex = 1;
             lbName.Text = "Mercedes-Benz";
-            lbName.Click += lbName_Click;
+            lbName.Click += lbName_Click_1;
             // 
             // lbYear
             // 
             lbYear.Content = "2023";
+            lbYear.Cursor = Cursors.Hand;
             lbYear.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
             lbYear.ForeColor = Color.FromArgb(212, 175, 55);
             lbYear.HorizontalAlignment = StringAlignment.Near;
@@ -79,10 +84,12 @@
             lbYear.Size = new Size(157, 25);
             lbYear.TabIndex = 2;
             lbYear.VerticalAlignment = StringAlignment.Near;
+            lbYear.Click += lbName_Click_1;
             // 
             // lbPrice
             // 
             lbPrice.Content = "\\$123,000";
+            lbPrice.Cursor = Cursors.Hand;
             lbPrice.Font = new Font("Segoe UI Semibold", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 204);
             lbPrice.ForeColor = Color.FromArgb(212, 175, 55);
             lbPrice.HorizontalAlignment = StringAlignment.Near;
@@ -92,6 +99,7 @@
             lbPrice.Size = new Size(159, 35);
             lbPrice.TabIndex = 3;
             lbPrice.VerticalAlignment = StringAlignment.Near;
+            lbPrice.Click += lbName_Click_1;
             // 
             // btnEdit
             // 
@@ -174,6 +182,7 @@
             // lbModel
             // 
             lbModel.Content = "model";
+            lbModel.Cursor = Cursors.Hand;
             lbModel.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
             lbModel.ForeColor = Color.FromArgb(212, 175, 55);
             lbModel.HorizontalAlignment = StringAlignment.Near;
@@ -184,6 +193,7 @@
             lbModel.Size = new Size(157, 25);
             lbModel.TabIndex = 27;
             lbModel.VerticalAlignment = StringAlignment.Center;
+            lbModel.Click += lbName_Click_1;
             // 
             // CarCard
             // 
@@ -197,8 +207,9 @@
             Controls.Add(lbYear);
             Controls.Add(lbName);
             Controls.Add(cuiPbImage);
+            Cursor = Cursors.Hand;
             Name = "CarCard";
-            Size = new Size(203, 290);
+            Size = new Size(203, 334);
             Click += CarCard_Click;
             ResumeLayout(false);
             PerformLayout();
